@@ -5,8 +5,8 @@
 It's common practice to use remote GIT-repositories with SSH instead of HTTPS.  
 You can create those key-files manually or you can use these scripts I've written:
 
-  * [Add-SSHKeyForBitbucket.ps1](git\Add-SSHKeyForBitbucket.ps1)
-  * [Add-SSHKeyForGithub.ps1](git\Add-SSHKeyForGithub.ps1)
+  * [Add-SSHKeyForBitbucket.ps1](git/Add-SSHKeyForBitbucket.ps1)
+  * [Add-SSHKeyForGithub.ps1](git/Add-SSHKeyForGithub.ps1)
 
 For creating the key-files the tool `ssh-keygen.exe` is required. It's part of [GIT](https://git-scm.com/) and  
 ca be installed via [chocolatey](https://chocolatey.org/) by running the following command as administrator:
