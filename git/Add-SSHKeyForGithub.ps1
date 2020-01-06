@@ -2,8 +2,8 @@
 # Author:   Markus Kofler (mkoflerAT)
 # Website:  https://www.kofler-it.com
 # Licence:  MIT
-# Version:  1.00
-# Date:     2020-01-04 03:00
+# Version:  1.10
+# Date:     2020-01-06 22:12
 # ==========================================================================
 # To run this script, you need 'ssh-keygen.exe'. I recommend to install
 # chocolatey (see: https://chocolatey.org/install) and then run as admin:
@@ -17,6 +17,11 @@ function Add-SSHKeyForGithub{
     $sshKeyName = "$today-rsa-key-$env:USERNAME-$GitHostName"
     $sshKeyFile = "$env:HOME\.ssh\$sshKeyName"
     $configFile = "$env:HOME\.ssh\config"
+    "------------------------------------------------"
+    "sshKeyName: $sshKeyName"
+    "sshKeyFile: $sshKeyFile"
+    "configFile: $configFile"
+    "------------------------------------------------"
     Push-Location 'C:\Program Files\Git\usr\bin\'
     .\ssh-keygen.exe -t rsa -C "$sshKeyName" -f "$sshKeyFile"
     "Host $GitHostDomain" | Out-File -Encoding utf8 -Append $configFile
