@@ -1,5 +1,16 @@
 # powershell-scripts
 
+A collection of some powershell-scripts and -functions.
+
+## Table of contents
+
+  * [Add scripts for creating SSH-Keys for Github/Bitbucket](#add-scripts-for-creating-ssh-keys)
+  * [Add script to clear the history in Powershell](#add-script-to-clear-the-history-of-powershell)
+  * [Add script for compressing folders into separate 7z-archives](#add-script-for-compressing-folders-into-separate-7z-archives)
+
+<hr>
+
+<a id="add-scripts-for-creating-ssh-keys"></a>
 ## Add scripts for creating SSH-Keys for Github/Bitbucket
 
 It's common practice to use remote GIT-repositories with SSH instead of HTTPS.  
@@ -22,11 +33,17 @@ References:
   * https://stackoverflow.com/questions/5596982/using-powershell-to-write-a-file-in-utf-8-without-the-bom
   * https://community.idera.com/database-tools/powershell/powertips/b/tips/posts/dealing-with-file-encoding-and-bom
 
+<hr>
+
+<a id="add-script-to-clear-the-history-of-powershell"></a>
 ## Add script to clear the history in Powershell
 
 Added a very nice script to clear the history properly.  
 Even if you press up and down in Powershell is cleared.
 
+<hr>
+
+<a id="add-script-for-compressing-folders-into-separate-7z-archives"></a>
 ## Add script for compressing folders into separate 7z-archives
 
 Add a script for compressing the content of each folder into a separate 7z-archive.  
