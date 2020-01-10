@@ -27,3 +27,13 @@ References:
 Added a very nice script to clear the history properly.  
 Even if you press up and down in Powershell is cleared.
 
+## Add script for compressing folders into separate 7z-archives
+
+Add a script for compressing the content of each folder into a separate 7z-archive.  
+Be aware that you NEED the powershell-module from https://github.com/thoemmi/7Zip4Powershell  
+which has to be installed by running a powershell as administrator by running:
+
+    Install-Module -Name 7Zip4Powershell
+
+More information on the powwershell-module is available on [Github](https://github.com/thoemmi/7Zip4Powershell).
+
