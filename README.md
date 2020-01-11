@@ -7,6 +7,7 @@ A collection of some powershell-scripts and -functions.
   * [Add scripts for creating SSH-Keys for Github/Bitbucket](#add-scripts-for-creating-ssh-keys)
   * [Add script to clear the history in Powershell](#add-script-to-clear-the-history-of-powershell)
   * [Add script for compressing folders into separate 7z-archives](#add-script-for-compressing-folders-into-separate-7z-archives)
+  * [Update Add-SSHKey-scripts to add line with username to config](#update-ssh-config-file-with-username)
 
 <hr>
 
@@ -53,4 +54,31 @@ which has to be installed by running a powershell as administrator by running:
     Install-Module -Name 7Zip4Powershell
 
 More information on the powwershell-module is available on [Github](https://github.com/thoemmi/7Zip4Powershell).
+
+<hr>
+
+<a id="update-ssh-config-file-with-username"></a>
+## Update Add-SSHKey-scripts to add line with username to config
+
+Added an additional line to the config file for the ssh-keys. This is necessary if you have a username on the  
+repository-host that is different from the one you're using on your client-system (Windows). For Bitbucket and  
+Github it's per default `git`. Here is an example-config:
+
+    Host server.yourdomain.com
+      User admin
+      HostName server.yourdomain.com
+      IdentityFile ~/.ssh/ssh-key-digitalocean
+
+    Host bitbucket.org
+      User git
+      HostName bitbucket.org
+      IdentityFile ~/.ssh/ssh-key-bitbucket
+
+    Host github.com
+      User git
+      HostName github.com
+      IdentityFile ~/.ssh/ssh-key-github
+
+If you ssh into one of those servers (e.g.: from Powershell) it will automatically pick up the correct  
+username from the config-file which has to reside in `~/.ssh/` into the same folder as the ssh-keys.
 

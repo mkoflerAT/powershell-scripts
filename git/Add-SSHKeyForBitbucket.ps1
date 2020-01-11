@@ -2,8 +2,8 @@
 # Author:   Markus Kofler (mkoflerAT)
 # Website:  https://www.kofler-it.com
 # Licence:  MIT
-# Version:  1.10
-# Date:     2020-01-06 22:12
+# Version:  1.20
+# Date:     2020-01-11 01:00
 # ==========================================================================
 # To run this script, you need 'ssh-keygen.exe'. I recommend to install
 # chocolatey (see: https://chocolatey.org/install) and then run as admin:
@@ -25,6 +25,7 @@ function Add-SSHKeyForBitbucket{
     Push-Location 'C:\Program Files\Git\usr\bin\'
     .\ssh-keygen.exe -t rsa -C "$sshKeyName" -f "$sshKeyFile"
     "Host $GitHostDomain" | Out-File -Encoding utf8 -Append $configFile
+    "  User git" | Out-File -Encoding utf8 -Append $configFile
     "  HostName $GitHostDomain" | Out-File -Encoding utf8 -Append $configFile
     "  IdentityFile ~/.ssh/$sshKeyName" | Out-File -Encoding utf8 -Append $configFile
     Pop-Location
