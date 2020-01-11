@@ -8,6 +8,7 @@ A collection of some powershell-scripts and -functions.
   * [Add script to clear the history in Powershell](#add-script-to-clear-the-history-of-powershell)
   * [Add script for compressing folders into separate 7z-archives](#add-script-for-compressing-folders-into-separate-7z-archives)
   * [Update Add-SSHKey-scripts to add line with username to config](#update-ssh-config-file-with-username)
+  * [Add script for creating SSH-Keys for Gitea](#add-script-for-creating-ssh-keys-for-gitea)
 
 <hr>
 
@@ -82,3 +83,11 @@ Github it's per default `git`. Here is an example-config:
 If you ssh into one of those servers (e.g.: from Powershell) it will automatically pick up the correct  
 username from the config-file which has to reside in `~/.ssh/` into the same folder as the ssh-keys.
 
+<hr>
+
+<a id="add-script-for-creating-ssh-keys-for-gitea"></a>
+## Add script for creating SSH-Keys for Gitea
+
+This script is basically the same like for Github/Bitbucket, but it's intended for use with your own,  
+personal Gitea-Server. You have to replace `$GitHostName` and `$GitHostDomain` in the script with  
+your own domain. For Gitea take a look at their website: https://gitea.io
