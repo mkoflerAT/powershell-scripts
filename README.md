@@ -9,6 +9,7 @@ A collection of some powershell-scripts and -functions.
   * [Add script for compressing folders into separate 7z-archives](#add-script-for-compressing-folders-into-separate-7z-archives)
   * [Update Add-SSHKey-scripts to add line with username to config](#update-ssh-config-file-with-username)
   * [Add script for creating SSH-Keys for Gitea](#add-script-for-creating-ssh-keys-for-gitea)
+  * [Add script for preferred windows-settings](#add-script-for-preferred-windows-settings)
 
 <hr>
 
@@ -91,3 +92,18 @@ username from the config-file which has to reside in `~/.ssh/` into the same fol
 This script is basically the same like for Github/Bitbucket, but it's intended for use with your own,  
 personal Gitea-Server. You have to replace `$GitHostName` and `$GitHostDomain` in the script with  
 your own domain. For Gitea take a look at their website: https://gitea.io
+
+<hr>
+
+<a id="add-script-for-preferred-windows-settings"></a>
+## Add script for preferred windows-settings
+
+Add a script to set preferred windows-settings like:
+  * Show file-extensions
+  * Don't combine windows on taskbar
+  * Show all systray-icons
+  * Show the ribbon in Wndows-Explorer
+
+The script needs to be run just once.
+
+<hr>
