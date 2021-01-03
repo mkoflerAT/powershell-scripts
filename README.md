@@ -10,6 +10,7 @@ A collection of some powershell-scripts and -functions.
   * [Update Add-SSHKey-scripts to add line with username to config](#update-ssh-config-file-with-username)
   * [Add script for creating SSH-Keys for Gitea](#add-script-for-creating-ssh-keys-for-gitea)
   * [Add script for preferred windows-settings](#add-script-for-preferred-windows-settings)
+  * [Add script for downloading SysinternalsSuite](#add-script-for-downloading-sysinternalssuite)
 
 <hr>
 
@@ -105,5 +106,13 @@ Add a script to set preferred windows-settings like:
   * Show the ribbon in Wndows-Explorer
 
 The script needs to be run just once.
+
+<hr>
+
+<a id="add-script-for-downloading-sysinternalssuite"></a>
+## Add script for downloading SysinternalsSuite
+
+This script downloads the Sysinternals-Suite to your Desktop and extracts it.  
+Might be quite useful when you're dpendant on some tools in there (e.g. puttygen).
 
 <hr>
