@@ -11,6 +11,7 @@ A collection of some powershell-scripts and -functions.
   * [Add script for creating SSH-Keys for Gitea](#add-script-for-creating-ssh-keys-for-gitea)
   * [Add script for preferred windows-settings](#add-script-for-preferred-windows-settings)
   * [Add script for downloading SysinternalsSuite](#add-script-for-downloading-sysinternalssuite)
+  * [Add script for downloading Bleachbit portable](#add-script-for-downloading-bleachbit-portable)
 
 <hr>
 
@@ -114,5 +115,15 @@ The script needs to be run just once.
 
 This script downloads the Sysinternals-Suite to your Desktop and extracts it.  
 Might be quite useful when you're dpendant on some tools in there (e.g. puttygen).
+
+<hr>
+
+<a id="add-script-for-downloading-bleachbit-portable"></a>
+## Add script for downloading Bleachbit portable
+
+This script downloads Bleachbit portable to your Desktop and extracts it.  
+Portable installation might be more convenient, if you don't want to install it.  
+But you're missing out on the 'Shred with Bleachbit' on the explorer-context-menu  
+when using portable mode.
 
 <hr>
