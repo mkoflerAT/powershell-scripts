@@ -1,0 +1,9 @@
+# A collection of useful .gitignore templates can be found here:
+# https://github.com/github/gitignore
+
+# ignore content of '.ignore' folder in all commits
+.[Ii]gnore/
+
+# ignore 2 specific markdown-file(s) for storing secrets (passwords, credentials,...) and temporary snippets
+SECRETS.md
+TEMP.md
