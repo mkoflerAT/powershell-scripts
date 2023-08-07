@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.2.0                                               #
+        # Version:  1.3.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-08-07 19:00                                    #
+        # Updated:  2023-08-08 22:30                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -147,6 +147,18 @@ $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
 $regName = "ConsentPromptBehaviorAdmin"
 $regValue = 1
 New-ItemProperty -Path $regPath -Name $regName -Value $regValue -Force
+
+# show seconds in the taskbar if the operating system is 'Windows 10'
+$osVersion = (Get-CimInstance Win32_OperatingSystem).Version
+
+if ($osVersion -match '^10\.') {
+    Write-Host "Show seconds within the clock in Windows 10."
+    $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+    $regName = "ShowSecondsInSystemClock"
+    $regValue = 1
+    New-ItemProperty -Path $regPath -Name $regName -Value $regValue -Force
+    Write-Host "Seconds in taskbar enabled."
+}
 
 # Add custom functions to profile
 $customFunctions = @'
