@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.0                                                 #
+        # Version:  1.1                                                 #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-07-02 22:30                                    #
+        # Updated:  2023-08-07 18:30                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -19,10 +19,12 @@
         # ===============================================================
 
     .EXAMPLE
-        Install-DevelopmentEnvironment.ps1
+        # You can run this script by running these line(s) within an administrative Powershell (not an ISE!!!):
+        # Set-ExecutionPolicy Bypass -Scope Process -Force; iwr -useb 'https://tinyurl.com/Install-DevEnvironment' | iex
 
     .LINK
         https://www.linkedin.com/in/mkoflerat/
+        https://raw.githubusercontent.com/mkoflerAT/powershell-scripts/main/src/Install-DevelopmentEnvironment.ps1
 
     .NOTES
         BSD 2-Clause License
@@ -57,7 +59,7 @@
         OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #>
 
-# check if running as Administrator
+# check if running as administrator
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     Write-Warning "You need to run this script as (local) administrator!"
     exit
@@ -68,6 +70,7 @@ if ($host.Name -like '*ISE*') {
     exit
 }
 
+# prompt user for git user name and email
 $gitUserName = Read-Host 'Enter your name (e.g. John Smith)'
 $gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
 
@@ -83,6 +86,8 @@ Install-Module -Scope AllUsers -Force -Name MSOnline
 Install-Module -Scope AllUsers -Force -Name ExchangeOnlineManagement
 Install-Module -Scope AllUsers -Force -Name Microsoft.Graph
 Install-Module -Scope AllUsers -Force -Name MicrosoftTeams
+
+# start timer
 $dateStart = Get-Date
 
 # create a PowerShell profile if needed
