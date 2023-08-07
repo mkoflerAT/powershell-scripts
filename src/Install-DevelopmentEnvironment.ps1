@@ -57,7 +57,12 @@
         OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #>
 
-# Prompt user for git user name and email
+# check if running as Administrator
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Warning "You need to run this script as (local) administrator!"
+    exit
+}
+
 $gitUserName = Read-Host 'Enter your name (e.g. John Smith)'
 $gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
 
