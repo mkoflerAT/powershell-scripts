@@ -8,7 +8,7 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.3.1                                               #
+        # Version:  1.3.2                                               #
         # Created:  originally somewhen in 2020                         #
         # Updated:  2023-08-08 00:00                                    #
         # ===============================================================
@@ -120,7 +120,6 @@ $env:Path = $envPathMachine + ";" + $evnPathUser
 dotnet tool install --global dotnet-ef
 dotnet tool install --global dotnet-aspnet-codegenerator
 setx DOTNET_CLI_TELEMETRY_OPTOUT 1
-dotnet ef --version
 
 # configure git settings
 git --version
