@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.3.0                                               #
+        # Version:  1.3.1                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-08-08 22:30                                    #
+        # Updated:  2023-08-08 00:00                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -62,12 +62,12 @@
 # check if running as administrator
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
     Write-Warning "You need to run this script as (local) administrator!"
-    exit
+    return
 }
 
 if ($host.Name -like '*ISE*') {
     Write-Warning "You need to run this script from a normal PowerShell - not an ISE!"
-    exit
+    return
 }
 
 # prompt user for git user name and email
