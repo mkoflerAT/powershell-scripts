@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.1                                                 #
+        # Version:  1.2.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-08-07 18:30                                    #
+        # Updated:  2023-08-07 19:00                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -141,6 +141,12 @@ code --install-extension yzhang.markdown-all-in-one      # https://marketplace.v
 code --install-extension ionutvmi.reg                    # https://marketplace.visualstudio.com/items?itemName=ionutvmi.reg
 code --install-extension coolbear.systemd-unit-file      # https://marketplace.visualstudio.com/items?itemName=coolbear.systemd-unit-file
 code --install-extension vscode-icons-team.vscode-icons  # https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons
+
+# create the registry key to prompt for a password each time elevated access is required - to turn off, use 5 as $regValue
+$regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+$regName = "ConsentPromptBehaviorAdmin"
+$regValue = 1
+New-ItemProperty -Path $regPath -Name $regName -Value $regValue -Force
 
 # Add custom functions to profile
 $customFunctions = @'
