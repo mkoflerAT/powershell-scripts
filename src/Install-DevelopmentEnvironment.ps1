@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.3.2                                               #
+        # Version:  1.4.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-08-08 00:00                                    #
+        # Updated:  2023-08-08 01:00                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -200,6 +200,12 @@ function Clear-HistoryExtended {
    [System.Windows.Forms.SendKeys]::Sendwait('%{F7 2}')
    Remove-Item (Get-PSReadlineOption).HistorySavePath
    Get-Process powershell | Stop-Process
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Delete all network-profiles (get rid of 'Network 2', 'Network 3',...)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Remove-NetworkProfiles {
+   Remove-Item 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles\*'
 }
 '@
 
