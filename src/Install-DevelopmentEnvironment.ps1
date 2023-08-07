@@ -63,6 +63,11 @@ if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
     exit
 }
 
+if ($host.Name -like '*ISE*') {
+    Write-Warning "You need to run this script from a normal PowerShell - not an ISE!"
+    exit
+}
+
 $gitUserName = Read-Host 'Enter your name (e.g. John Smith)'
 $gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
 
