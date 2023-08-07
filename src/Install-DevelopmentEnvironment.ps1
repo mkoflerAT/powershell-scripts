@@ -71,7 +71,18 @@ if ($host.Name -like '*ISE*') {
 $gitUserName = Read-Host 'Enter your name (e.g. John Smith)'
 $gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
 
-# Start timer
+# set the PSGallery as a trusted installation location  
+Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+
+# install all the modules required
+# $env:PSModuleAutoLoadingPreference = 'All'
+Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+Install-PackageProvider -Name NuGet -Force -Scope AllUsers
+Install-Module -Scope AllUsers -Force -Name AzureAD
+Install-Module -Scope AllUsers -Force -Name MSOnline
+Install-Module -Scope AllUsers -Force -Name ExchangeOnlineManagement
+Install-Module -Scope AllUsers -Force -Name Microsoft.Graph
+Install-Module -Scope AllUsers -Force -Name MicrosoftTeams
 $dateStart = Get-Date
 
 # create a PowerShell profile if needed
