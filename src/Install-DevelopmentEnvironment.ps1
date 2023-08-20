@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.4.1                                               #
+        # Version:  1.4.2                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-08-20 22:00                                    #
+        # Updated:  2023-08-20 22:45                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -121,9 +121,12 @@ $envPathMachine = [System.Environment]::GetEnvironmentVariable("Path", "Machine"
 $evnPathUser = [System.Environment]::GetEnvironmentVariable("Path", "User")
 $env:Path = $envPathMachine + ";" + $evnPathUser
 
+<# ------ disable installation of .NET tools -----
 # install .NET Core Tools for EntityFramework and opt out from telemetry
 dotnet tool install --global dotnet-ef
 dotnet tool install --global dotnet-aspnet-codegenerator
+#>
+
 setx DOTNET_CLI_TELEMETRY_OPTOUT 1
 
 # configure git settings
