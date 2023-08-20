@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.4.0                                               #
+        # Version:  1.4.1                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-08-08 01:00                                    #
+        # Updated:  2023-08-20 22:00                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -74,6 +74,10 @@ if ($host.Name -like '*ISE*') {
 $gitUserName = Read-Host 'Enter your name (e.g. John Smith)'
 $gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
 
+<# 
+# ===== this part sometimes causes PowerShell to hang for unknown reasons ====
+# ===== this part is disabled for future investigations =====
+
 # set the PSGallery as a trusted installation location  
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
@@ -86,6 +90,7 @@ Install-Module -Scope AllUsers -Force -Name MSOnline
 Install-Module -Scope AllUsers -Force -Name ExchangeOnlineManagement
 Install-Module -Scope AllUsers -Force -Name Microsoft.Graph
 Install-Module -Scope AllUsers -Force -Name MicrosoftTeams
+#>
 
 # start timer
 $dateStart = Get-Date
