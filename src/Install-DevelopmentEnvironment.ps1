@@ -10,7 +10,7 @@
         # Name:     Install-DevelopmentEnvironment.ps1                  #
         # Version:  1.5.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-10-10 23:00                                    #
+        # Updated:  2023-10-10 23:15                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -73,24 +73,6 @@ if ($host.Name -like '*ISE*') {
 # prompt user for git user name and email
 $gitUserName = Read-Host 'Enter your name (e.g. John Smith)'
 $gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
-
-<# 
-# ===== this part sometimes causes PowerShell to hang for unknown reasons ====
-# ===== this part is disabled for future investigations =====
-
-# set the PSGallery as a trusted installation location  
-Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-
-# install all the modules required
-# $env:PSModuleAutoLoadingPreference = 'All'
-Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-Install-PackageProvider -Name NuGet -Force -Scope AllUsers
-Install-Module -Scope AllUsers -Force -Name AzureAD
-Install-Module -Scope AllUsers -Force -Name MSOnline
-Install-Module -Scope AllUsers -Force -Name ExchangeOnlineManagement
-Install-Module -Scope AllUsers -Force -Name Microsoft.Graph
-Install-Module -Scope AllUsers -Force -Name MicrosoftTeams
-#>
 
 # start timer
 $dateStart = Get-Date
