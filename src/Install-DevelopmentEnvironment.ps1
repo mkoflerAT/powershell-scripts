@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.4.2                                               #
+        # Version:  1.5.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-08-20 22:45                                    #
+        # Updated:  2023-10-10 23:00                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -138,16 +138,19 @@ git config --global core.editor "code --wait --new-window"
 git config --global init.defaultbranch main
 
 # install extensions for vscode
-code --install-extension ms-dotnettools.csharp           # https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp
-code --install-extension ms-vscode.powershell            # https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell
-code --install-extension mhutchie.git-graph              # https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
-code --install-extension donjayamanne.githistory         # https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory
-code --install-extension huizhou.githd                   # https://marketplace.visualstudio.com/items?itemName=huizhou.githd
-code --install-extension yzane.markdown-pdf              # https://marketplace.visualstudio.com/items?itemName=yzane.markdown-pdf
-code --install-extension yzhang.markdown-all-in-one      # https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
-code --install-extension ionutvmi.reg                    # https://marketplace.visualstudio.com/items?itemName=ionutvmi.reg
-code --install-extension coolbear.systemd-unit-file      # https://marketplace.visualstudio.com/items?itemName=coolbear.systemd-unit-file
-code --install-extension vscode-icons-team.vscode-icons  # https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons
+code --install-extension ms-dotnettools.csharp          # https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp
+code --install-extension ms-vscode.powershell           # https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell
+code --install-extension mhutchie.git-graph             # https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
+code --install-extension donjayamanne.githistory        # https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory
+code --install-extension huizhou.githd                  # https://marketplace.visualstudio.com/items?itemName=huizhou.githd
+code --install-extension yzane.markdown-pdf             # https://marketplace.visualstudio.com/items?itemName=yzane.markdown-pdf
+code --install-extension yzhang.markdown-all-in-one     # https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
+code --install-extension ionutvmi.reg                   # https://marketplace.visualstudio.com/items?itemName=ionutvmi.reg
+code --install-extension coolbear.systemd-unit-file     # https://marketplace.visualstudio.com/items?itemName=coolbear.systemd-unit-file
+code --install-extension vscode-icons-team.vscode-icons # https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons
+code --install-extension mechatroner.rainbow-csv        # https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv
+code --install-extension mushan.vscode-paste-image      # https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
+code --install-extension quicktype.quicktype	        # https://marketplace.visualstudio.com/items?itemName=quicktype.quicktype
 
 # create the registry key to prompt for a password each time elevated access is required - to turn off, use 5 as $regValue
 $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
