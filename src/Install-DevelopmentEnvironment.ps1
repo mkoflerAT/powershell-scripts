@@ -8,14 +8,14 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.5.0                                               #
+        # Version:  1.6.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2023-10-10 23:15                                    #
+        # Updated:  2024-01-01 10:00                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
         # LinkedIn: https://www.linkedin.com/in/mkoflerat/              #
-        # Website:  https://www.kofler-it.com/                          #
+        # Website:  https://markuskofler.com                            #
         # ===============================================================
 
     .EXAMPLE
@@ -91,8 +91,21 @@ choco feature enable -n=allowGlobalConfirmation
 choco upgrade chocolatey
 
 # install basic programs everyone should have
-$basicTools = @('7zip', 'brave', 'bleachbit', 'greenshot', 'keepass', 'keepassxc', 'putty', 'winscp')
+$basicTools = @('7zip', 'brave', 'bleachbit', 'keepass', 'putty', 'signal', 'wire', 'winscp')
 choco install $basicTools
+
+# install basic programs everyone should have
+# $addonTools = @('libreoffice-fresh', 'keepassxc')
+$addonTools = @('keepassxc')
+choco install $addonTools
+
+# install screenshot-tools and terminate them after installing (to prevent blocking registering the PRINT-key)
+$screenshotTools = @('flameshot', 'greenshot', 'sharex')
+$screenshotTools | % {
+   choco install $PSItem
+   Start-Sleep -Seconds 5
+   gps | ? { $_.ProcessName -like '*flameshot*' -or $_.ProcessName -like '*greenshot*' -or $_.ProcessName -like '*sharex*'  } | % { (gps $_.ProcessName).Kill() }
+}
 
 # install tools needed for development
 $developmentTools = @('git', 'poshgit', 'vscode', 'dotnet-6.0-sdk', 'dotnet-sdk', 'nvm', 'jq', 'gpg4win')
