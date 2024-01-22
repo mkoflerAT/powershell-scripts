@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.6.0                                               #
+        # Version:  1.7.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2024-01-01 10:00                                    #
+        # Updated:  2024-01-22 22:15                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -91,7 +91,8 @@ choco feature enable -n=allowGlobalConfirmation
 choco upgrade chocolatey
 
 # install basic programs everyone should have
-$basicTools = @('7zip', 'brave', 'bleachbit', 'keepass', 'putty', 'signal', 'wire', 'winscp')
+# excluded: 'bleachbit' --> causes errors during install
+$basicTools = @('7zip', 'brave', 'keepass', 'putty', 'signal', 'wire', 'winscp')
 choco install $basicTools
 
 # install basic programs everyone should have
@@ -108,7 +109,8 @@ $screenshotTools | % {
 }
 
 # install tools needed for development
-$developmentTools = @('git', 'poshgit', 'vscode', 'dotnet-6.0-sdk', 'dotnet-sdk', 'nvm', 'jq', 'gpg4win')
+# excluded: 'dotnet-6.0-sdk'
+$developmentTools = @('git', 'poshgit', 'vscode', 'dotnet-sdk', 'powershell-core', 'nvm', 'jq', 'gpg4win')
 choco install $developmentTools
 
 # reload PATH-variable to make commands [code] [dotnet] [git] available
