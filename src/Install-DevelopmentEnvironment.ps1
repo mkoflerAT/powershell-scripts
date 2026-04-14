@@ -8,9 +8,9 @@
     .DESCRIPTION
         #===============================================================#
         # Name:     Install-DevelopmentEnvironment.ps1                  #
-        # Version:  1.7.0                                               #
+        # Version:  3.0.0                                               #
         # Created:  originally somewhen in 2020                         #
-        # Updated:  2024-01-22 22:15                                    #
+        # Updated:  2026-02-02 00:00                                    #
         # ===============================================================
         # Author:   Markus Kofler                                       #
         # Github:   https://www.github.com/mkoflerAT/                   #
@@ -29,7 +29,7 @@
     .NOTES
         BSD 2-Clause License
 
-        Copyright (c) 2023, Markus Kofler
+        Copyright (c) 2026, Markus Kofler
         All rights reserved.
 
         Author:     Markus Kofler
@@ -71,7 +71,7 @@ if ($host.Name -like '*ISE*') {
 }
 
 # prompt user for git user name and email
-$gitUserName = Read-Host 'Enter your name (e.g. John Smith)'
+$gitUserName  = Read-Host 'Enter your name  (e.g. John Smith)'
 $gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
 
 # start timer
@@ -91,13 +91,11 @@ choco feature enable -n=allowGlobalConfirmation
 choco upgrade chocolatey
 
 # install basic programs everyone should have
-# excluded: 'bleachbit' --> causes errors during install
-$basicTools = @('7zip', 'brave', 'keepass', 'putty', 'signal', 'wire', 'winscp')
+$basicTools = @('7zip','brave','keepass','keepassxc','putty','signal','veracrypt','winscp')
 choco install $basicTools
 
 # install basic programs everyone should have
-# $addonTools = @('libreoffice-fresh', 'keepassxc')
-$addonTools = @('keepassxc')
+$addonTools = @('libreoffice-fresh')
 choco install $addonTools
 
 # install screenshot-tools and terminate them after installing (to prevent blocking registering the PRINT-key)
@@ -109,8 +107,10 @@ $screenshotTools | % {
 }
 
 # install tools needed for development
-# excluded: 'dotnet-6.0-sdk'
-$developmentTools = @('git', 'poshgit', 'vscode', 'dotnet-sdk', 'powershell-core', 'nvm', 'jq', 'gpg4win')
+$dotnetframeworks = @('dotnet-6.0-sdk','dotnet-8.0-sdk','dotnet-10.0-sdk')
+$developmentTools = @('git','poshgit','vscode','powershell-core','nvm','jq','gpg4win','ssms')
+
+choco install $dotnetframeworks
 choco install $developmentTools
 
 # reload PATH-variable to make commands [code] [dotnet] [git] available
@@ -136,18 +136,20 @@ git config --global init.defaultbranch main
 
 # install extensions for vscode
 code --install-extension ms-dotnettools.csharp          # https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp
+code --install-extension ms-azuretools.vscode-bicep     # https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep
 code --install-extension ms-vscode.powershell           # https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell
 code --install-extension mhutchie.git-graph             # https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
-code --install-extension donjayamanne.githistory        # https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory
-code --install-extension huizhou.githd                  # https://marketplace.visualstudio.com/items?itemName=huizhou.githd
-code --install-extension yzane.markdown-pdf             # https://marketplace.visualstudio.com/items?itemName=yzane.markdown-pdf
-code --install-extension yzhang.markdown-all-in-one     # https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
-code --install-extension ionutvmi.reg                   # https://marketplace.visualstudio.com/items?itemName=ionutvmi.reg
-code --install-extension coolbear.systemd-unit-file     # https://marketplace.visualstudio.com/items?itemName=coolbear.systemd-unit-file
-code --install-extension vscode-icons-team.vscode-icons # https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons
 code --install-extension mechatroner.rainbow-csv        # https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv
-code --install-extension mushan.vscode-paste-image      # https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
-code --install-extension quicktype.quicktype	        # https://marketplace.visualstudio.com/items?itemName=quicktype.quicktype
+
+# code --install-extension yzane.markdown-pdf             # https://marketplace.visualstudio.com/items?itemName=yzane.markdown-pdf
+# code --install-extension yzhang.markdown-all-in-one     # https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
+# code --install-extension donjayamanne.githistory        # https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory
+# code --install-extension huizhou.githd                  # https://marketplace.visualstudio.com/items?itemName=huizhou.githd
+# code --install-extension ionutvmi.reg                   # https://marketplace.visualstudio.com/items?itemName=ionutvmi.reg
+# code --install-extension coolbear.systemd-unit-file     # https://marketplace.visualstudio.com/items?itemName=coolbear.systemd-unit-file
+# code --install-extension vscode-icons-team.vscode-icons # https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons
+# code --install-extension mushan.vscode-paste-image      # https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
+# code --install-extension quicktype.quicktype	          # https://marketplace.visualstudio.com/items?itemName=quicktype.quicktype
 
 # create the registry key to prompt for a password each time elevated access is required - to turn off, use 5 as $regValue
 $regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
@@ -214,6 +216,57 @@ function Clear-HistoryExtended {
 # ------------------------------------------------------------------------------------------------------------------------------------------------------
 function Remove-NetworkProfiles {
    Remove-Item 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles\*'
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Fake timestamps for files to get nice dates (e.g.: 2020-11-03 00:00)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Set-FileTimeStamps {
+   Param (
+       [Parameter(mandatory=$true)]
+       [string[]]$path,
+       [datetime]$date=(Get-Date)
+   )
+
+   Get-ChildItem -Path $path |
+       ForEach-Object {
+           $_.CreationTime = $date
+           $_.LastAccessTime = $date
+           $_.LastWriteTime = $date
+       }
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Putty-Sessions (.reg-Export/Import)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Backup-PuttySettings {
+    $today = (Get-Date).ToString("yyyy-MM-dd-HHmm")
+    $backupPath = "H:\backups\putty"
+    $backupFile = "$backupPath\$today-putty-complete.reg"
+
+    if(!(Test-Path $backupPath)) { New-Item -ItemType Directory $backupPath }
+    reg export HKCU\Software\SimonTatham $backupFile
+}
+function Restore-PuttySettings {
+    $backupPath = "H:\backups\putty"
+    $backupFile = (Get-ChildItem $backupPath\*-putty-complete.reg | Sort-Object LastWriteTime | Select-Object -Last 1).FullName    
+    reg import $backupFile
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# PoshGit-Installation
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Install-PoshGit {
+    PowerShellGet\Install-Module posh-git -Scope CurrentUser -Force
+    Import-Module posh-git
+}
+function Set-GitSettings {
+    Param (
+        [Parameter(mandatory = $true)][string]$gitUserName,
+        [Parameter(mandatory = $true)][string]$gitUserEmail
+    )
+    git config --global user.name $gitUserName
+    git config --global user.email $gitUserEmail
+    git config --global core.autocrlf true
+    git config --global core.editor "code --wait --new-window"
+    git config --global init.defaultbranch main
 }
 '@
 
