@@ -1,0 +1,334 @@
+<#
+    .SYNOPSIS
+        Gets your machine ready for development. This script has been built
+        somewhen around 2020 and has gone through multiple iterations and
+        various improvements and changed over time quite a bit. Feel free
+        to adapt/use this script and share it amongst your peers.
+
+    .DESCRIPTION
+        #===============================================================#
+        # Name:     Install-AC51543.ps1                                 #
+        # Version:  3.0.0                                               #
+        # Created:  originally somewhen in 2020                         #
+        # Updated:  2026-02-02 00:00                                    #
+        # ===============================================================
+        # Author:   Markus Kofler                                       #
+        # Github:   https://www.github.com/mkoflerAT/                   #
+        # LinkedIn: https://www.linkedin.com/in/mkoflerat/              #
+        # Website:  https://markuskofler.com                            #
+        # ===============================================================
+
+    .EXAMPLE
+        # You can run this script by running these line(s) within an administrative Powershell (not an ISE!!!):
+        # Set-ExecutionPolicy Bypass -Scope Process -Force; iwr -useb 'https://tinyurl.com/Install-AC51543' | iex
+
+    .LINK
+        https://www.linkedin.com/in/mkoflerat/
+        https://www.github.com/mkoflerat/
+        https://tinyurl.com/Install-AC51543
+
+    .NOTES
+        BSD 2-Clause License
+
+        Copyright (c) 2026, Markus Kofler
+        All rights reserved.
+
+        Author:     Markus Kofler
+        Github:     https://www.github.com/mkoflerAT
+        LinkedIn:   https://www.linkedin.com/in/mkoflerat/
+        Websites:   https://markuskofler.com
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are met:
+
+        1. Redistributions of source code must retain the above copyright notice, this
+        list of conditions and the following disclaimer.
+
+        2. Redistributions in binary form must reproduce the above copyright notice,
+        this list of conditions and the following disclaimer in the documentation
+        and/or other materials provided with the distribution.
+
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+        AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+        IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+        DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+        FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+        DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+        SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+        CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+        OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#>
+
+# check if running as administrator
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    Write-Warning "You need to run this script as (local) administrator!"
+    return
+}
+
+if ($host.Name -like '*ISE*') {
+    Write-Warning "You need to run this script from a normal PowerShell - not an ISE!"
+    return
+}
+
+# prompt user for git user name and email
+$gitUserName  = Read-Host 'Enter your name  (e.g. John Smith)'
+$gitUserEmail = Read-Host 'Enter your email (e.g. john.smith@contoso.com)'
+
+# start timer
+$dateStart = Get-Date
+
+# create a PowerShell profile if needed
+if(!(Test-Path $PROFILE)) {
+    New-Item -Type File -Force "$PROFILE"
+    '# PowerShell-Profile' > $PROFILE
+}
+
+# install or upgrade chocolatey
+Set-ExecutionPolicy Bypass -Scope Process -Force
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+choco feature enable -n=allowGlobalConfirmation
+choco upgrade chocolatey
+
+# install basic programs everyone should have
+$basicTools = @('7zip','brave','keepass','keepassxc','putty','signal','veracrypt','winscp')
+choco install $basicTools
+
+# install basic programs everyone should have
+$addonTools = @('libreoffice-fresh')
+choco install $addonTools
+
+# install screenshot-tools and terminate them after installing (to prevent blocking registering the PRINT-key)
+$screenshotTools = @('flameshot', 'greenshot')
+$screenshotTools | % {
+   choco install $PSItem
+   Start-Sleep -Seconds 5
+   gps | ? { $_.ProcessName -like '*flameshot*' -or $_.ProcessName -like '*greenshot*' -or $_.ProcessName -like '*sharex*'  } | % { (gps $_.ProcessName).Kill() }
+}
+
+# install tools needed for development
+$dotnetframeworks = @('dotnet-6.0-sdk','dotnet-10.0-sdk')
+$developmentTools = @('git','poshgit','vscode','powershell-core','nvm','jq','ssms')
+
+choco install $dotnetframeworks
+choco install $developmentTools
+
+# reload PATH-variable to make commands [code] [dotnet] [git] available
+$envPathMachine = [System.Environment]::GetEnvironmentVariable("Path", "Machine")
+$evnPathUser = [System.Environment]::GetEnvironmentVariable("Path", "User")
+$env:Path = $envPathMachine + ";" + $evnPathUser
+
+<# ------ disable installation of .NET tools -----
+# install .NET Core Tools for EntityFramework and opt out from telemetry
+dotnet tool install --global dotnet-ef
+dotnet tool install --global dotnet-aspnet-codegenerator
+#>
+
+setx DOTNET_CLI_TELEMETRY_OPTOUT 1
+
+# configure git settings
+git --version
+git config --global user.name $gitUserName
+git config --global user.email $gitUserEmail
+git config --global core.autocrlf true
+git config --global core.editor "code --wait --new-window"
+git config --global init.defaultbranch main
+
+# install extensions for vscode
+code --install-extension ms-dotnettools.csharp          # https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp
+code --install-extension ms-azuretools.vscode-bicep     # https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep
+code --install-extension ms-vscode.powershell           # https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell
+code --install-extension mhutchie.git-graph             # https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph
+code --install-extension mechatroner.rainbow-csv        # https://marketplace.visualstudio.com/items?itemName=mechatroner.rainbow-csv
+
+# code --install-extension yzane.markdown-pdf             # https://marketplace.visualstudio.com/items?itemName=yzane.markdown-pdf
+# code --install-extension yzhang.markdown-all-in-one     # https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
+# code --install-extension donjayamanne.githistory        # https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory
+# code --install-extension huizhou.githd                  # https://marketplace.visualstudio.com/items?itemName=huizhou.githd
+# code --install-extension ionutvmi.reg                   # https://marketplace.visualstudio.com/items?itemName=ionutvmi.reg
+# code --install-extension coolbear.systemd-unit-file     # https://marketplace.visualstudio.com/items?itemName=coolbear.systemd-unit-file
+# code --install-extension vscode-icons-team.vscode-icons # https://marketplace.visualstudio.com/items?itemName=vscode-icons-team.vscode-icons
+# code --install-extension mushan.vscode-paste-image      # https://marketplace.visualstudio.com/items?itemName=mushan.vscode-paste-image
+# code --install-extension quicktype.quicktype	          # https://marketplace.visualstudio.com/items?itemName=quicktype.quicktype
+
+# create the registry key to prompt for a password each time elevated access is required - to turn off, use 5 as $regValue
+$regPath = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
+$regName = "ConsentPromptBehaviorAdmin"
+$regValue = 1
+New-ItemProperty -Path $regPath -Name $regName -Value $regValue -Force
+
+# show seconds in the taskbar if the operating system is 'Windows 10'
+$osVersion = (Get-CimInstance Win32_OperatingSystem).Version
+
+if ($osVersion -match '^10\.') {
+    Write-Host "Show seconds in Win10/Win11 systray clock."
+    $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+    $regName = "ShowSecondsInSystemClock"
+    $regValue = 1
+    New-ItemProperty -Path $regPath -Name $regName -Value $regValue -Force
+    Write-Host "Seconds in taskbar enabled."
+}
+
+# Add custom functions to profile
+$customFunctions = @'
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Set a desired date for the last commit
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Set-CommitterDateForLastCommit {
+    Param ([Parameter(Mandatory=$true)][string] $CommitDate)
+    # $commitDateString = "2010-01-01T14:30:00"
+    $commitDateString = $CommitDate.Replace(" ", "T")
+    $env:GIT_COMMITTER_DATE = $commitDateString
+    git commit --amend --date $commitDateString
+    $env:GIT_COMMITTER_DATE = ""
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Clear recent items from explorer
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Clear-RecentFiles {
+    Remove-Item $env:APPDATA\Microsoft\Windows\Recent\* -Recurse -Force
+    Remove-Item HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\RunMRU\*
+    Remove-Item HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths\*
+    Remove-Item HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\TypedPaths\*
+    taskkill /f /im explorer.exe
+    Start-Process explorer.exe
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Clear powershell-history (incl. arrow-up/arrow-down)
+# Set-PSReadLineOption -HistorySaveStyle SaveNothing
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Clear-HistoryExtended {
+   Clear-History
+   [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+   [System.Windows.Forms.SendKeys]::Sendwait('%{F7 2}')
+   Remove-Item (Get-PSReadlineOption).HistorySavePath
+   Get-Process powershell | Stop-Process
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Delete all network-profiles (get rid of 'Network 2', 'Network 3',...)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Remove-NetworkProfiles {
+   Remove-Item 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\NetworkList\Profiles\*'
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Fake timestamps for files to get nice dates (e.g.: 2020-11-03 00:00)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Set-FileTimeStamps {
+   Param (
+       [Parameter(mandatory=$true)]
+       [string[]]$path,
+       [datetime]$date=(Get-Date)
+   )
+
+   Get-ChildItem -Path $path |
+       ForEach-Object {
+           $_.CreationTime = $date
+           $_.LastAccessTime = $date
+           $_.LastWriteTime = $date
+       }
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Putty-Sessions (.reg-Export/Import)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Backup-PuttySettings {
+    $today = (Get-Date).ToString("yyyy-MM-dd-HHmm")
+    $backupPath = "H:\backups\putty"
+    $backupFile = "$backupPath\$today-putty-complete.reg"
+
+    if(!(Test-Path $backupPath)) { New-Item -ItemType Directory $backupPath }
+    reg export HKCU\Software\SimonTatham $backupFile
+}
+function Restore-PuttySettings {
+    $backupPath = "H:\backups\putty"
+    $backupFile = (Get-ChildItem $backupPath\*-putty-complete.reg | Sort-Object LastWriteTime | Select-Object -Last 1).FullName    
+    reg import $backupFile
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# PoshGit-Installation
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function Install-PoshGit {
+    PowerShellGet\Install-Module posh-git -Scope CurrentUser -Force
+    Import-Module posh-git
+}
+function Set-GitSettings {
+    Param (
+        [Parameter(mandatory = $true)][string]$gitUserName,
+        [Parameter(mandatory = $true)][string]$gitUserEmail
+    )
+    git config --global user.name $gitUserName
+    git config --global user.email $gitUserEmail
+    git config --global core.autocrlf true
+    git config --global core.editor "code --wait --new-window"
+    git config --global init.defaultbranch main
+}
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Define helper-functions to type less when coding
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function db  { Invoke-Command -ScriptBlock { dotnet build } }
+function gil { Invoke-Command -ScriptBlock { git log --oneline } }
+function gis { Invoke-Command -ScriptBlock { git status } }
+function gpr { Invoke-Command -ScriptBlock { git push --all origin } }
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+# Load functions to work with EF Core - run them from webapp-root
+# ------------------------------------------------------------------------------------------------------------------------------------------------------
+function New-InitialMigrations {
+    dotnet ef migrations add IDS_Initial --context IdentityDbContext --output-dir Data/Migrations/Identity
+    dotnet ef migrations add APP_Initial --context ApplicationDbContext --output-dir Data/Migrations/Application
+}
+function Update-DevelopmentDatabase {
+    $Env:ASPNETCORE_ENVIRONMENT = "Development"
+    dotnet ef database update --context IdentityDbContext
+    dotnet ef database update --context ApplicationDbContext
+}
+function Update-ProductionDatabase {
+    $Env:ASPNETCORE_ENVIRONMENT = "Production"
+    dotnet ef database update --context IdentityDbContext
+    dotnet ef database update --context ApplicationDbContext
+}
+function New-Migration($migrationName) {
+    dotnet ef migrations add "APP_$migrationName" --context ApplicationDbContext --output-dir Data/Migrations/Application
+}
+function New-MigrationForIdentitySystem($migrationName) {
+    dotnet ef migrations add "IDS_$migrationName" --context IdentityDbContext --output-dir Data/Migrations/IdentityDbContext
+}
+function Get-Migrations {
+    dotnet ef migrations list --context IdentityDbContext
+    dotnet ef migrations list --context ApplicationDbContext
+}
+function Reset-DevelopmentDatabaseToInitialMigration {
+    dotnet ef database update --context ApplicationDbContext APP_Initial
+    # now you can run (1..n times - to get rid of migrations):
+    # dotnet ef migrations remove --context ApplicationDbContext
+}
+'@
+
+Add-Content $PROFILE -Value $customFunctions
+
+$customFunctionsLoader = @'
+# -----------------------------------------------------------------------------------------------------------------
+# Load custom functions [BEGIN]
+# -----------------------------------------------------------------------------------------------------------------
+'-'*100 | Write-Host
+$functionsPath = "$HOME\Documents\WindowsPowershell\functions\*.ps1"
+if (Test-Path $functionsPath) { gci $functionsPath | % { Write-Host "Load functions: $($_.Name)"; . $_.FullName } }
+else { "No functions in $functionsPath - skip loading." | Write-Host }
+'-'*100 | Write-Host; Write-Host
+# -----------------------------------------------------------------------------------------------------------------
+# Load custom functions [END]
+# -----------------------------------------------------------------------------------------------------------------
+'@
+
+# ------------------------------------------------------------------------------------------------------------------
+# Add code-block to load custom functions into PowerShell-Profile
+# ------------------------------------------------------------------------------------------------------------------
+if((Get-Content("$PROFILE")).Contains('# Load custom functions [BEGIN]')) {
+    "$PROFILE already contains a loading-fragment for custom functions - so it won't be added again"
+}
+else {
+   Add-Content $PROFILE -Value $customFunctionsLoader 
+}
+
+# End timer and display installation time
+$dateEnd = Get-Date
+$duration = $dateEnd - $dateStart
+Write-Host "Installation completed in $($duration.TotalMinutes) minute(s)."
