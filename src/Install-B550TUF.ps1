@@ -4,7 +4,7 @@
 
     .DESCRIPTION
         Name:     Install-B550TUF.ps1
-        Version:  3.1.0
+        Version:  3.1.1
         Author:   Markus Kofler
         Updated:  2026-04-15
 
@@ -96,7 +96,7 @@ git config --global core.editor "code --wait --new-window"
 git config --global init.defaultbranch main
 
 # install extensions for vscode
-code --install-extension ms-dotnettools.csharp          # https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code
+code --install-extension anthropic.claude-code          # https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code
 code --install-extension ms-dotnettools.csharp          # https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp
 code --install-extension ms-azuretools.vscode-bicep     # https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep
 code --install-extension ms-vscode.powershell           # https://marketplace.visualstudio.com/items?itemName=ms-vscode.PowerShell
